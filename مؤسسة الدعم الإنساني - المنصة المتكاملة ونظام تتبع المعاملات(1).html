@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مؤسسة الدعم الإنساني | البوابة الرسمية وتتبع المعاملات</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Tajawal & Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        royal: {
+                            950: '#040d09',
+                            900: '#06140e',
+                            800: '#0a291e',
+                            700: '#113d2d',
+                        },
+                        gold: {
+                            300: '#f5d78e',
+                            400: '#e5c158',
+                            500: '#d4af37',
+                            600: '#b38f22',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --green-dark: #06140e;
+            --green-card: #0a291e;
+            --gold-primary: #d4af37;
+            --gold-light: #f5d78e;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background-color: #06140e;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Royal Glassmorphism */
+        .royal-glass {
+            background: rgba(10, 41, 30, 0.78);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+        }
+
+        .royal-nav {
+            background: rgba(6, 20, 14, 0.9);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        /* Gold Gradient Text & Buttons */
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #f5d78e 0%, #d4af37 50%, #b38f22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #f5d78e 0%, #d4af37 55%, #b38f22 100%);
+            color: #06140e;
+            font-weight: 800;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.28);
+            transition: all 0.25s ease;
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.42);
+        }
+
+        /* Status Checkmark Glow */
+        .status-glow {
+            box-shadow: 0 0 35px rgba(212, 175, 55, 0.45), inset 0 0 15px rgba(245, 215, 142, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #06140e; }
+        ::-webkit-scrollbar-thumb { background: #113d2d; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d4af37; }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-500/30 selection:text-amber-200">
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-6 left-6 z-[120] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- ==================== 1. ROYAL HEADER & NAVIGATION ==================== -->
+    <header class="fixed top-0 inset-x-0 z-50 royal-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Brand Logo -->
+                <button onclick="switchMainView('home')" class="flex items-center gap-3 text-right group">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-300/20 to-amber-600/10 border border-gold-500/50 flex items-center justify-center shadow-lg group-hover:scale-105 transition">
+                        <svg class="w-7 h-7 text-gold-400" viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
+                            <path d="M20 7L24.5 15.5L33 20L24.5 24.5L20 33L15.5 24.5L7 20L15.5 15.5L20 7Z" stroke="currentColor" stroke-width="2" fill="currentColor" fill-opacity="0.18"/>
+                            <circle cx="20" cy="20" r="4" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div id="header-brand-name" class="text-white font-black text-lg sm:text-xl leading-tight">مؤسسة الدعم الإنساني</div>
+                        <div class="text-[11px] text-gold-300/80 font-semibold tracking-wide">البوابة الرسمية والخدمات الإلكترونية</div>
+                    </div>
+                </button>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center gap-6 text-sm font-bold text-slate-200">
+                    <button onclick="switchMainView('home')" id="nav-btn-home" class="nav-view-btn text-gold-300 hover:text-gold-300 transition py-2">الرئيسية</button>
+                    <button onclick="switchMainView('apply')" id="nav-btn-apply" class="nav-view-btn hover:text-gold-300 transition py-2 flex items-center gap-1.5">
+                        <i data-lucide="file-plus-2" class="w-4 h-4 text-gold-400"></i>
+                        <span>تقديم طلب / شكوى</span>
+                    </button>
+                    <button onclick="switchMainView('status')" id="nav-btn-status" class="nav-view-btn hover:text-gold-300 transition py-2 flex items-center gap-1.5">
+                        <i data-lucide="search-check" class="w-4 h-4 text-gold-400"></i>
+                        <span>متابعة حالة الطلب</span>
+                    </button>
+                    <a href="#impact-section" onclick="switchMainView('home')" class="hover:text-gold-300 transition py-2">مجالات التأثير</a>
+                    <a href="#projects-section" onclick="switchMainView('home')" class="hover:text-gold-300 transition py-2">المشاريع</a>
+                </nav>
+
+                <!-- Right Actions: Admin Button & Dropdown Menu -->
+                <div class="flex items-center gap-2.5">
+                    <button onclick="openAdminModal()" class="px-4 py-2.5 rounded-xl btn-gold text-xs sm:text-sm flex items-center gap-2">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        <span>لوحة الإدارة</span>
+                    </button>
+
+                    <!-- Hamburger Dropdown Toggle (Matches Reference Site) -->
+                    <div class="relative">
+                        <button id="dropdown-toggle-btn" onclick="toggleQuickDropdown()" class="w-10 h-10 rounded-xl bg-royal-800 border border-gold-500/30 text-gold-300 flex items-center justify-center hover:bg-royal-700 transition" aria-label="القائمة">
+                            <i data-lucide="menu" id="dropdown-icon" class="w-5 h-5"></i>
+                        </button>
+
+                        <!-- Quick Royal Dropdown Menu -->
+                        <div id="quick-dropdown" class="hidden absolute left-0 mt-3 w-64 rounded-2xl royal-glass shadow-2xl p-2.5 space-y-1 z-50">
+                            <button onclick="switchMainView('home'); toggleQuickDropdown();" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-sm font-bold text-white text-right">
+                                <i data-lucide="home" class="w-4 h-4 text-gold-400"></i>
+                                <span>الرئيسية</span>
+                            </button>
+                            <button onclick="switchMainView('apply'); toggleQuickDropdown();" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-sm font-bold text-white text-right">
+                                <i data-lucide="file-edit" class="w-4 h-4 text-emerald-400"></i>
+                                <span>تقديم طلب جديد</span>
+                            </button>
+                            <button onclick="switchMainView('status'); toggleQuickDropdown();" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-sm font-bold text-white text-right">
+                                <i data-lucide="activity" class="w-4 h-4 text-amber-400"></i>
+                                <span>متابعة حالة الطلب / الشكوى</span>
+                            </button>
+                            <div class="border-t border-gold-500/20 my-1"></div>
+                            <a href="https://wa.me/966500000000" target="_blank" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-emerald-500/15 text-sm font-bold text-emerald-300 text-right">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                <span>التواصل المباشر عبر واتساب</span>
+                            </a>
+                            <button onclick="openAdminModal(); toggleQuickDropdown();" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gold-500/15 hover:bg-gold-500/25 text-sm font-extrabold text-gold-300 text-right">
+                                <i data-lucide="lock" class="w-4 h-4"></i>
+                                <span>دخول الإدارة (فهد الشهري)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== VIEW 1: MAIN INSTITUTIONAL HOME VIEW ==================== -->
+    <main id="view-home" class="pt-20">
+        
+        <!-- Hero Banner -->
+        <section class="relative min-h-[88vh] flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0">
+                <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=2000&q=85" 
+                     onerror="this.src='https://placehold.co/1920x1080/06140e/d4af37?text=Humanitarian+Support+Foundation'"
+                     alt="مؤسسة الدعم الإنساني" 
+                     class="w-full h-full object-cover opacity-30">
+                <div class="absolute inset-0 bg-gradient-to-b from-royal-900/80 via-royal-900/90 to-royal-900"></div>
+            </div>
+
+            <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center py-16">
+                <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full royal-glass text-gold-300 text-xs sm:text-sm font-bold mb-7">
+                    <span class="w-2 h-2 rounded-full bg-gold-400 animate-ping"></span>
+                    <span>منصة الدعم الإنساني والمساعدات المعتمدة</span>
+                </div>
+
+                <h1 id="hero-headline" class="text-3xl sm:text-5xl md:text-6xl font-black text-white leading-tight mb-6">
+                    شركاء في سعي الإنسانية لأجل <span class="text-gold-gradient">عالم متكافئ الفرص</span>
+                </h1>
+
+                <p id="hero-subheadline" class="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-10">
+                    نمدّ يد العون ونطلق المبادرات التنموية والإغاثية المستدامة في أكثر من 190 دولة، مع نظام إلكتروني متكامل لتقديم الطلبات ومتابعة حالتها بكل شفافية.
+                </p>
+
+                <!-- Primary Service Action Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button onclick="switchMainView('apply')" class="w-full sm:w-auto px-8 py-4 rounded-2xl btn-gold text-base flex items-center justify-center gap-2.5">
+                        <i data-lucide="file-plus-2" class="w-5 h-5"></i>
+                        <span>تقديم طلب مساعدة أو شكوى</span>
+                    </button>
+                    <button onclick="switchMainView('status')" class="w-full sm:w-auto px-8 py-4 rounded-2xl royal-glass hover:bg-white/10 text-gold-300 font-extrabold text-base flex items-center justify-center gap-2.5 transition">
+                        <i data-lucide="search-check" class="w-5 h-5"></i>
+                        <span>تتبع حالة المعاملة برقم المرجع</span>
+                    </button>
+                </div>
+
+                <!-- Quick Track Mini Bar -->
+                <div class="mt-12 max-w-xl mx-auto royal-glass p-3 rounded-2xl flex flex-col sm:flex-row gap-2.5 shadow-2xl">
+                    <input type="text" id="quick-track-input" placeholder="أدخل رقم المعاملة أو الشكوى (مثال: 9563)..." class="flex-1 px-4 py-3 rounded-xl bg-royal-900/90 border border-gold-500/30 text-white placeholder-slate-400 text-sm focus:outline-none focus:border-gold-400">
+                    <button onclick="quickSearchTransaction()" class="px-6 py-3 rounded-xl bg-gold-500 hover:bg-gold-400 text-royal-900 font-extrabold text-sm transition shrink-0">
+                        استعلام فوري
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact Statistics -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 pb-20">
+            <div id="home-stats-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- 5 Core Areas of Impact -->
+        <section id="impact-section" class="py-20 bg-royal-950/60 border-y border-gold-500/15">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-14">
+                    <span class="text-gold-400 font-extrabold text-xs tracking-widest uppercase">ركائز العمل المؤسسي</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white mt-2">مجالات التأثير الخمسة</h2>
+                </div>
+                <div id="home-impact-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest Projects -->
+        <section id="projects-section" class="py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
+                    <div>
+                        <span class="text-gold-400 font-extrabold text-xs tracking-widest uppercase">المبادرات والبرامج</span>
+                        <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">أحدث المشاريع الإنسانية</h2>
+                    </div>
+                    <button onclick="switchMainView('apply')" class="px-5 py-2.5 rounded-xl border border-gold-500/40 text-gold-300 hover:bg-gold-500/10 text-sm font-bold self-start">
+                        تقديم طلب استفادة ←
+                    </button>
+                </div>
+                <div id="home-projects-grid" class="grid grid-cols-1 md:grid-cols-3 gap-7">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== VIEW 2: APPLY / SUBMIT NEW REQUEST OR COMPLAINT ==================== -->
+    <section id="view-apply" class="hidden pt-28 pb-24 px-4 sm:px-6 min-h-screen">
+        <div class="max-w-xl mx-auto">
+            <div class="royal-glass rounded-3xl p-6 sm:p-10 shadow-2xl">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 rounded-2xl bg-gold-500/15 border border-gold-500/40 text-gold-400 mx-auto flex items-center justify-center mb-4">
+                        <i data-lucide="file-signature" class="w-8 h-8"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white">تقديم طلب مساعدة أو شكوى</h2>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-2">
+                        قم بتعبئة البيانات بدقة؛ سيقوم النظام بإصدار <strong class="text-gold-300">رقم مرجعي خاص بك</strong> فور الإرسال لمتابعة حالة معاملتك.
+                    </p>
+                </div>
+
+                <form id="client-apply-form" onsubmit="handleClientApplication(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gold-300 mb-1.5">الاسم الكامل لمقدم الطلب *</label>
+                        <input type="text" id="app-name" required placeholder="أدخل الاسم الثلاثي أو الرباعي" class="w-full px-4 py-3.5 rounded-xl bg-royal-900/90 border border-gold-500/30 text-white text-sm focus:outline-none focus:border-gold-400">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gold-300 mb-1.5">رقم الهاتف (مع رمز الدولة) *</label>
+                            <input type="tel" id="app-phone" required placeholder="مثال: 966501234567" dir="ltr" class="w-full px-4 py-3.5 rounded-xl bg-royal-900/90 border border-gold-500/30 text-white text-sm text-right focus:outline-none focus:border-gold-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gold-300 mb-1.5">نوع المعاملة *</label>
+                            <select id="app-type" class="w-full px-4 py-3.5 rounded-xl bg-royal-900/90 border border-gold-500/30 text-white text-sm focus:outline-none focus:border-gold-400">
+                                <option value="طلب مساعدة مالية وإنسانية">طلب مساعدة مالية وإنسانية</option>
+                                <option value="طلب دعم سكني أو علاجي">طلب دعم سكني أو علاجي</option>
+                                <option value="شكوى أو استفسار عن معاملة">شكوى أو استفسار عن معاملة</option>
+                                <option value="مبادرة شراكة مجتمعية">مبادرة شراكة مجتمعية</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gold-300 mb-1.5">رقم الحساب البنكي / IBAN (اختياري)</label>
+                        <input type="text" id="app-account" placeholder="SA00 0000 0000 0000 0000 0000" dir="ltr" class="w-full px-4 py-3.5 rounded-xl bg-royal-900/90 border border-gold-500/30 text-white text-sm text-right focus:outline-none focus:border-gold-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gold-300 mb-1.5">شرح تفاصيل الطلب أو الشكوى *</label>
+                        <textarea id="app-details" rows="4" required placeholder="اكتب تفاصيل طلبك بوضوح ليتم مراجعته من قبل الإدارة..." class="w-full px-4 py-3.5 rounded-xl bg-royal-900/90 border border-gold-500/30 text-white text-sm focus:outline-none focus:border-gold-400"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 rounded-2xl btn-gold text-base flex items-center justify-center gap-2 mt-2">
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                        <span>إرسال الطلب وإصدار الرقم المرجعي</span>
+                    </button>
+                </form>
+
+                <!-- Generated Reference Ticket Box (Appears immediately after submission) -->
+                <div id="generated-ticket-box" class="hidden mt-6 p-6 rounded-2xl bg-emerald-950/90 border-2 border-gold-400 text-center space-y-3">
+                    <div class="text-gold-300 font-extrabold text-sm">✓ تم تسجيل معاملتك بنجاح في النظام</div>
+                    <div class="text-xs text-slate-300">الرقم المرجعي / رقم الشكوى الخاص بك هو:</div>
+                    <div id="generated-ref-number" class="text-3xl font-black text-gold-400 tracking-wider bg-royal-900 py-3 rounded-xl border border-gold-500/40 select-all">
+                        9564
+                    </div>
+                    <p class="text-xs text-slate-300">احتفظ بهذا الرقم لمتابعة حالة المعاملة في أي وقت.</p>
+                    <button id="view-created-status-btn" class="w-full py-3 rounded-xl btn-gold text-sm">
+                        الانتقال لصفحة حالة الطلب الآن
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== VIEW 3: ROYAL STATUS TRACKER (MATCHES status.html EXACTLY) ==================== -->
+    <section id="view-status" class="hidden pt-28 pb-24 px-4 min-h-screen flex flex-col items-center">
+        
+        <!-- Search Bar to Switch Transaction / Complaint ID -->
+        <div class="w-full max-w-[480px] mb-5">
+            <form onsubmit="handleStatusLookup(event)" class="royal-glass p-2.5 rounded-2xl flex gap-2">
+                <input type="text" id="status-search-input" placeholder="أدخل رقم المعاملة أو الشكوى أو الهاتف..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-royal-900/90 border border-gold-500/30 text-white text-sm focus:outline-none focus:border-gold-400">
+                <button type="submit" class="px-5 py-2.5 rounded-xl btn-gold text-xs sm:text-sm shrink-0">
+                    بحث
+                </button>
+            </form>
+        </div>
+
+        <!-- Mobile-First Royal Glass Status Card (max-width: 480px matching status.html) -->
+        <div id="status-card-container" class="w-full max-w-[480px] royal-glass rounded-[32px] p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+            
+            <!-- Top Subtle Gold Shimmer Line -->
+            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-gold-400 to-transparent"></div>
+
+            <!-- Header Section -->
+            <div class="text-center mb-6">
+                <span class="inline-block px-3.5 py-1 rounded-full bg-gold-500/15 border border-gold-500/30 text-gold-300 text-xs font-extrabold mb-2">
+                    رقم النظام • بوابة المتابعة المعتمدة
+                </span>
+                <h1 class="text-2xl sm:text-3xl font-black text-white">حالة الطلب</h1>
+                <p id="st-client-name" class="text-sm text-gold-300/90 font-bold mt-1">المستفيد: معتمد في النظام</p>
+            </div>
+
+            <!-- Glowing Status Icon -->
+            <div class="flex flex-col items-center justify-center my-6">
+                <div id="st-icon-circle" class="w-20 h-20 rounded-full bg-gradient-to-br from-gold-300 via-gold-500 to-gold-600 text-royal-900 flex items-center justify-center status-glow mb-4">
+                    <i data-lucide="check" id="st-main-icon" class="w-10 h-10 stroke-[3]"></i>
+                </div>
+                <h2 id="st-status-title" class="text-xl font-black text-gold-300">تم اعتماد الطلب</h2>
+                <p id="st-status-sub" class="text-xs text-slate-300 mt-1 text-center">تم التحقق من كافة البيانات والمستندات بنجاح</p>
+            </div>
+
+            <!-- Approved Golden Celebration Banner -->
+            <div id="st-approved-banner" class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-gold-400/25 to-amber-500/20 border border-gold-400/60 text-center shadow-lg">
+                <p class="text-sm sm:text-base font-black text-gold-300">
+                    🎉 تهانينا - تم اعتماد طلبك بنجاح
+                </p>
+            </div>
+
+            <!-- 3-Step Visual Progress Stepper -->
+            <div class="mb-8 px-2">
+                <div class="flex items-center justify-between relative">
+                    <!-- Connecting Line -->
+                    <div class="absolute top-4 right-6 left-6 h-1 bg-white/15 rounded-full z-0">
+                        <div id="st-stepper-bar" class="h-full bg-gradient-to-l from-gold-400 to-gold-500 rounded-full transition-all duration-500" style="width: 100%;"></div>
+                    </div>
+
+                    <!-- Step 1 -->
+                    <div class="relative z-10 flex flex-col items-center gap-2">
+                        <div id="step-dot-1" class="w-9 h-9 rounded-full bg-gold-500 text-royal-900 font-black text-sm flex items-center justify-center shadow-md">✓</div>
+                        <span class="text-xs font-bold text-gold-300">تم التقديم</span>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative z-10 flex flex-col items-center gap-2">
+                        <div id="step-dot-2" class="w-9 h-9 rounded-full bg-gold-500 text-royal-900 font-black text-sm flex items-center justify-center shadow-md">✓</div>
+                        <span id="step-label-2" class="text-xs font-bold text-gold-300">المراجعة</span>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative z-10 flex flex-col items-center gap-2">
+                        <div id="step-dot-3" class="w-9 h-9 rounded-full bg-gold-500 text-royal-900 font-black text-sm flex items-center justify-center shadow-md">✓</div>
+                        <span id="step-label-3" class="text-xs font-bold text-gold-300">التنفيذ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Grid Cards (White/Translucent Cards with No Text Clipping) -->
+            <div class="space-y-3 mb-6">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="p-3.5 rounded-2xl bg-white/10 border border-white/15">
+                        <div class="text-[11px] text-slate-300 font-semibold">رقم المعاملة / الشكوى</div>
+                        <div id="st-tx-id" class="text-base sm:text-lg font-black text-gold-300 mt-0.5 break-all">9563</div>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-white/10 border border-white/15">
+                        <div class="text-[11px] text-slate-300 font-semibold">رقم الهاتف المرتبط</div>
+                        <div id="st-phone" class="text-sm sm:text-base font-extrabold text-white mt-0.5 break-all" dir="ltr">212661728352</div>
+                    </div>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-white/10 border border-white/15">
+                    <div class="text-[11px] text-slate-300 font-semibold">نوع المعاملة والبيان</div>
+                    <div id="st-type" class="text-sm font-bold text-white mt-0.5 break-words">طلب مساعدة مالية وإنسانية</div>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-white/10 border border-white/15">
+                    <div class="text-[11px] text-slate-300 font-semibold">رقم الحساب / المرجع البنكي</div>
+                    <div id="st-account" class="text-xs sm:text-sm font-bold text-gold-300 mt-0.5 break-all" dir="ltr">SA88 8000 0000 6080 1016 7519</div>
+                </div>
+            </div>
+
+            <!-- Admin Notes & Fees Box -->
+            <div class="p-4 rounded-2xl bg-royal-900/90 border border-gold-500/35 mb-6 space-y-2">
+                <div class="flex items-center gap-2 text-xs font-extrabold text-gold-400">
+                    <i data-lucide="info" class="w-4 h-4"></i>
+                    <span>ملاحظات وتوجيهات الإدارة:</span>
+                </div>
+                <p id="st-notes" class="text-xs sm:text-sm text-slate-200 leading-relaxed break-words">
+                    تم اعتماد طلبكم بنجاح وتجهيز أمر الصرف. يرجى التواصل مع قسم المتابعة لتأكيد استلام الحوالة.
+                </p>
+            </div>
+
+            <!-- Interactive Action Buttons -->
+            <div class="space-y-2.5">
+                <a id="st-whatsapp-btn" href="https://wa.me/966500000000" target="_blank" class="w-full py-3.5 rounded-2xl btn-gold text-sm flex items-center justify-center gap-2">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    <span>التواصل المباشر مع الإدارة لإتمام الإجراء</span>
+                </a>
+                <button onclick="copyStatusShareLink()" class="w-full py-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition">
+                    <i data-lucide="link" class="w-4 h-4 text-gold-400"></i>
+                    <span>نسخ رابط متابعة هذه المعاملة</span>
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-royal-950 border-t border-gold-500/20 py-10 px-4 text-center text-xs text-slate-400">
+        <div class="max-w-5xl mx-auto space-y-3">
+            <div class="text-gold-300 font-extrabold text-base">مؤسسة الدعم الإنساني</div>
+            <p>جميع الحقوق محفوظة © 2026 • نظام إدارة المعاملات والمساعدات الإنسانية</p>
+        </div>
+    </footer>
+
+    <!-- ==================== ADMIN CONTROL PANEL MODAL (PASSWORD: 7772596 | FAHAD AL-SHAHRI) ==================== -->
+    <div id="admin-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-2 sm:p-5 bg-black/85 backdrop-blur-md">
+        <div class="bg-royal-900 border border-gold-500/40 rounded-3xl max-w-6xl w-full h-[92vh] flex flex-col overflow-hidden shadow-2xl">
+            
+            <!-- Modal Header -->
+            <div class="bg-royal-950 px-6 py-4 flex items-center justify-between border-b border-gold-500/25 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl btn-gold flex items-center justify-center">
+                        <i data-lucide="shield" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-black text-base sm:text-lg text-white">لوحة التحكم وإدارة المعاملات</h3>
+                        <p id="admin-welcome-subtitle" class="text-xs text-gold-300 font-bold">بوابة الإدارة العليا • يرجى تسجيل الدخول</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminModal()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- ADMIN LOGIN GATE (Password: 7772596) -->
+            <div id="admin-login-screen" class="flex-1 flex items-center justify-center p-6">
+                <form onsubmit="handleAdminLogin(event)" class="royal-glass p-8 rounded-3xl max-w-sm w-full text-center space-y-5 shadow-2xl">
+                    <div class="w-16 h-16 rounded-2xl bg-gold-500/15 border border-gold-500/40 text-gold-400 mx-auto flex items-center justify-center">
+                        <i data-lucide="lock-keyhole" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-black text-xl text-white">تسجيل دخول الإدارة</h4>
+                        <p class="text-xs text-gold-300 mt-1 font-bold">المدير العام: فهد الشهري</p>
+                    </div>
+
+                    <div class="text-right space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">اسم المسؤول</label>
+                            <input type="text" id="admin-user-input" value="فهد الشهري" class="w-full px-4 py-3 rounded-xl bg-royal-900 border border-gold-500/30 text-gold-300 font-bold text-sm focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">كلمة المرور *</label>
+                            <input type="password" id="admin-pass-input" required placeholder="أدخل كلمة المرور" class="w-full px-4 py-3 rounded-xl bg-royal-900 border border-gold-500/40 text-white text-center tracking-widest font-black text-lg focus:outline-none focus:border-gold-400">
+                        </div>
+                    </div>
+
+                    <p id="admin-login-error" class="hidden text-xs font-bold text-red-400 bg-red-950/60 py-2 px-3 rounded-lg border border-red-500/30">
+                        كلمة المرور غير صحيحة! يرجى التأكد والمحاولة مرة أخرى.
+                    </p>
+
+                    <button type="submit" class="w-full py-3.5 rounded-xl btn-gold text-sm">
+                        دخول إلى لوحة التحكم
+                    </button>
+                </form>
+            </div>
+
+            <!-- ADMIN DASHBOARD WORKSPACE (Unlocked after entering 7772596) -->
+            <div id="admin-dashboard-screen" class="hidden flex-1 flex flex-col md:flex-row overflow-hidden">
+                
+                <!-- Sidebar -->
+                <div class="w-full md:w-64 bg-royal-950 p-4 flex md:flex-col gap-2 overflow-x-auto shrink-0 border-b md:border-b-0 md:border-l border-gold-500/20">
+                    <button onclick="switchAdminTab('transactions')" id="adm-tab-transactions" class="adm-nav-btn active flex items-center justify-between px-4 py-3 rounded-xl text-xs sm:text-sm font-extrabold btn-gold whitespace-nowrap">
+                        <span class="flex items-center gap-2.5">
+                            <i data-lucide="file-check-2" class="w-4 h-4"></i>
+                            <span>المعاملات والشكاوى</span>
+                        </span>
+                        <span id="adm-tx-count" class="px-2 py-0.5 rounded-full bg-royal-900 text-gold-300 text-[10px]">0</span>
+                    </button>
+
+                    <button onclick="switchAdminTab('issue')" id="adm-tab-issue" class="adm-nav-btn flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold text-slate-200 hover:bg-white/10 whitespace-nowrap">
+                        <i data-lucide="plus-circle" class="w-4 h-4 text-gold-400"></i>
+                        <span>إصدار رقم مرجعي جديد</span>
+                    </button>
+
+                    <button onclick="switchAdminTab('site')" id="adm-tab-site" class="adm-nav-btn flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold text-slate-200 hover:bg-white/10 whitespace-nowrap">
+                        <i data-lucide="settings" class="w-4 h-4 text-gold-400"></i>
+                        <span>إعدادات الموقع</span>
+                    </button>
+
+                    <div class="md:mt-auto pt-2">
+                        <button onclick="logoutAdmin()" class="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-bold text-red-300 hover:bg-red-500/15 whitespace-nowrap">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                            <span>قفل الجلسة</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Admin Content -->
+                <div class="flex-1 overflow-y-auto p-5 sm:p-8 space-y-6">
+                    
+                    <!-- TAB A: MANAGE & COMPLETE TRANSACTIONS / CHANGE COMPLAINT ID -->
+                    <div id="adm-panel-transactions" class="space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gold-500/20 pb-4">
+                            <div>
+                                <h4 class="font-black text-xl text-white">إدارة وإنجاز معاملات العملاء والشكاوى</h4>
+                                <p class="text-xs text-slate-300 mt-1">يمكنك تغيير رقم الشكوى / الرقم المرجعي، اعتماد الطلبات، تحديث مراحل التنفيذ، وكتابة الملاحظات.</p>
+                            </div>
+                            <button onclick="switchAdminTab('issue')" class="px-4 py-2.5 rounded-xl btn-gold text-xs shrink-0 self-start">
+                                + إصدار رقم مرجعي جديد
+                            </button>
+                        </div>
+
+                        <!-- Transactions List -->
+                        <div id="admin-transactions-list" class="space-y-4">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- TAB B: ISSUE NEW REFERENCE NUMBER MANUALLY -->
+                    <div id="adm-panel-issue" class="hidden space-y-6">
+                        <div class="border-b border-gold-500/20 pb-4">
+                            <h4 class="font-black text-xl text-white">إصدار رقم مرجعي / رقم شكوى جديد</h4>
+                            <p class="text-xs text-slate-300 mt-1">أنشئ معاملة جديدة برقم مرجعي مخصص أو مولّد تلقائياً لتظهر فوراً في صفحة حالة الطلب.</p>
+                        </div>
+
+                        <form onsubmit="handleIssueNewTransaction(event)" class="royal-glass p-6 rounded-2xl space-y-4 max-w-2xl">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gold-300 mb-1.5">الرقم المرجعي / رقم الشكوى *</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="new-tx-id" required class="w-full px-3.5 py-2.5 rounded-xl bg-royal-900 border border-gold-500/40 text-gold-300 font-black text-sm">
+                                        <button type="button" onclick="generateRandomRefInput()" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white shrink-0" title="توليد رقم تلقائي">توليد</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gold-300 mb-1.5">رقم هاتف العميل *</label>
+                                    <input type="text" id="new-tx-phone" required placeholder="مثال: 966500000000" dir="ltr" class="w-full px-3.5 py-2.5 rounded-xl bg-royal-900 border border-gold-500/30 text-white text-sm text-right">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gold-300 mb-1.5">اسم المستفيد / العميل *</label>
+                                    <input type="text" id="new-tx-name" required placeholder="الاسم الكامل" class="w-full px-3.5 py-2.5 rounded-xl bg-royal-900 border border-gold-500/30 text-white text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gold-300 mb-1.5">نوع المعاملة</label>
+                                    <input type="text" id="new-tx-type" value="طلب مساعدة مالية وإنسانية" class="w-full px-3.5 py-2.5 rounded-xl bg-royal-900 border border-gold-500/30 text-white text-sm">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gold-300 mb-1.5">حالة المعاملة</label>
+                                    <select id="new-tx-status" class="w-full px-3.5 py-2.5 rounded-xl bg-royal-900 border border-gold-500/30 text-white text-sm">
+                                        <option value="approved">تم الاعتماد (يظهر شريط التهنئة الذهبي)</option>
+                                        <option value="review">قيد المراجعة والتدقيق</option>
+                                        <option value="completed">مكتمل وتم التنفيذ</option>
+                                        <option value="rejected">مرفوض / يتطلب استكمال</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gold-300 mb-1.5">مرحلة شريط التتبع (Stepper)</label>
+                                    <select id="new-tx-step" class="w-full px-3.5 py-2.5 rounded-xl bg-royal-900 border border-gold-500/30 text-white text-sm">
+                                        <option value="3">المرحلة 3: التنفيذ (مكتمل بالكامل)</option>
+                                        <option value="2">المرحلة 2: المراجعة</option>
+                                        <option value="1">المرحلة 1: تم التقديم</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gold-300 mb-1.5">رقم الحساب / المرجع البنكي</label>
+                                <input type="text" id="new-tx-account" placeholder="SA00 0000 0000 0000" dir="ltr" class="w-full px-3.5 py-2.5 rounded-xl bg-royal-900 border border-gold-500/30 text-white text-sm text-right">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gold-300 mb-1.5">ملاحظات وتعليمات تظهر للعميل</label>
+                                <textarea id="new-tx-notes" rows="3" placeholder="اكتب التعليمات أو تفاصيل الصرف التي ستظهر في صندوق الملاحظات للعميل..." class="w-full px-3.5 py-2.5 rounded-xl bg-royal-900 border border-gold-500/30 text-white text-sm"></textarea>
+                            </div>
+
+                            <button type="submit" class="px-8 py-3.5 rounded-xl btn-gold text-sm">
+                                إصدار وحفظ المعاملة الآن
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- TAB C: SITE IDENTITY SETTINGS -->
+                    <div id="adm-panel-site" class="hidden space-y-6">
+                        <div class="border-b border-gold-500/20 pb-4">
+                            <h4 class="font-black text-xl text-white">إعدادات الهوية ورقم الواتساب</h4>
+                            <p class="text-xs text-slate-300 mt-1">تعديل اسم المؤسسة ورقم التواصل المباشر في صفحة حالة الطلب.</p>
+                        </div>
+
+                        <form onsubmit="saveSiteSettings(event)" class="royal-glass p-6 rounded-2xl space-y-4 max-w-xl">
+                            <div>
+                                <label class="block text-xs font-bold text-gold-300 mb-1.5">اسم المؤسسة</label>
+                                <input type="text" id="set-brand-name" class="w-full px-4 py-2.5 rounded-xl bg-royal-900 border border-gold-500/30 text-white text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gold-300 mb-1.5">رقم واتساب الإدارة (بدون + أو مسافات)</label>
+                                <input type="text" id="set-whatsapp" dir="ltr" placeholder="966500000000" class="w-full px-4 py-2.5 rounded-xl bg-royal-900 border border-gold-500/30 text-white text-sm text-right">
+                            </div>
+                            <button type="submit" class="px-6 py-3 rounded-xl btn-gold text-sm">حفظ الإعدادات</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== EDIT / COMPLETE TRANSACTION MODAL ==================== -->
+    <div id="edit-tx-modal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+        <div class="bg-royal-900 border border-gold-500/50 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-gold-500/20 pb-3">
+                <h4 class="font-black text-lg text-gold-300">تعديل وإنجاز المعاملة / تغيير رقم الشكوى</h4>
+                <button onclick="closeEditTxModal()" class="text-slate-400 hover:text-white">✕</button>
+            </div>
+
+            <form onsubmit="saveEditedTransaction(event)" class="space-y-4">
+                <input type="hidden" id="edit-tx-original-id">
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gold-300 mb-1">الرقم المرجعي / رقم الشكوى *</label>
+                        <input type="text" id="edit-tx-id" required class="w-full px-3.5 py-2.5 rounded-xl bg-royal-950 border border-gold-400 text-gold-300 font-black text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gold-300 mb-1">رقم الهاتف *</label>
+                        <input type="text" id="edit-tx-phone" required dir="ltr" class="w-full px-3.5 py-2.5 rounded-xl bg-royal-950 border border-gold-500/30 text-white text-sm text-right">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gold-300 mb-1">اسم المستفيد</label>
+                    <input type="text" id="edit-tx-name" required class="w-full px-3.5 py-2.5 rounded-xl bg-royal-950 border border-gold-500/30 text-white text-sm">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gold-300 mb-1">حالة الإنجاز</label>
+                        <select id="edit-tx-status" class="w-full px-3 py-2.5 rounded-xl bg-royal-950 border border-gold-500/30 text-white text-xs sm:text-sm">
+                            <option value="approved">تم الاعتماد (تهنئة ذهبية)</option>
+                            <option value="completed">مكتمل / تم التنفيذ</option>
+                            <option value="review">قيد المراجعة</option>
+                            <option value="rejected">مرفوض / يتطلب استكمال</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gold-300 mb-1">مرحلة التقدم (1 - 3)</label>
+                        <select id="edit-tx-step" class="w-full px-3 py-2.5 rounded-xl bg-royal-950 border border-gold-500/30 text-white text-xs sm:text-sm">
+                            <option value="1">1 - تم التقديم</option>
+                            <option value="2">2 - المراجعة</option>
+                            <option value="3">3 - التنفيذ (مكتمل)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gold-300 mb-1">رقم الحساب / المرجع البنكي</label>
+                    <input type="text" id="edit-tx-account" dir="ltr" class="w-full px-3.5 py-2.5 rounded-xl bg-royal-950 border border-gold-500/30 text-white text-sm text-right">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gold-300 mb-1">ملاحظات الإدارة للعميل</label>
+                    <textarea id="edit-tx-notes" rows="3" class="w-full px-3.5 py-2.5 rounded-xl bg-royal-950 border border-gold-500/30 text-white text-sm"></textarea>
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button type="submit" class="flex-1 py-3 rounded-xl btn-gold text-sm">حفظ التعديلات وإنجاز الطلب</button>
+                    <button type="button" onclick="closeEditTxModal()" class="px-5 py-3 rounded-xl bg-white/10 text-white text-sm font-bold">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
+    <script>
+        // Admin Credentials Configuration
+        const ADMIN_CONFIG = {
+            managerName: "فهد الشهري",
+            password: "7772596"
+        };
+
+        // Storage Key
+        const STORAGE_KEY = "humanitarian_support_system_v1";
+
+        // Default Initial Transactions (Including Reference ID 9563 from user's link)
+        const DEFAULT_STATE = {
+            settings: {
+                brandName: "مؤسسة الدعم الإنساني",
+                whatsapp: "966500000000"
+            },
+            stats: [
+                { number: "+45 سنة", label: "من العطاء المؤسسي المستدام", icon: "clock" },
+                { number: "+5 مليار $", label: "مستثمرة في المشاريع الإنسانية", icon: "landmark" },
+                { number: "+1.5 مليار", label: "مستفيد ومستفيدة حول العالم", icon: "users" },
+                { number: "190 دولة", label: "نصل إليها بمبادراتنا وشراكاتنا", icon: "globe" }
+            ],
+            impactAreas: [
+                { title: "تنمية المجتمعات", desc: "بناء المساكن وتطوير البنية التحتية والرعاية الصحية.", img: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80" },
+                { title: "تمكين المرأة والشباب", desc: "برامج التدريب المهني وريادة الأعمال والتمويل.", img: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80" },
+                { title: "بناء الجسور الثقافية", desc: "تعزيز الحوار والتفاهم والمنح الأكاديمية العالمية.", img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80" },
+                { title: "الإغاثة عند الكوارث", desc: "استجابة عاجلة وتسيير جسور إغاثية للمتضررين.", img: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=800&q=80" },
+                { title: "البيئة المستدامة", desc: "مشاريع الطاقة النظيفة والتشجير ومكافحة التصحر.", img: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80" }
+            ],
+            projects: [
+                { title: "مبادرة السكن التنموي وتأهيل الأسر", category: "تنمية المجتمعات", img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800&q=80" },
+                { title: "برنامج تمكين رواد الأعمال والحرفيين", category: "تمكين المرأة والشباب", img: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80" },
+                { title: "حملة الإغاثة الطبية العاجلة", category: "الإغاثة عند الكوارث", img: "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&w=800&q=80" }
+            ],
+            transactions: [
+                {
+                    id: "9563",
+                    phone: "212661728352",
+                    name: "المستفيد المعتمد - ملف رقم 9563",
+                    type: "طلب مساعدة مالية وإنسانية",
+                    account: "MA64 0115 1900 0001 2050 0014 8921",
+                    status: "approved",
+                    step: 3,
+                    notes: "تم اعتماد طلبكم بنجاح وتجهيز أمر الصرف. يرجى التواصل مع الإدارة لتأكيد استلام الحوالة.",
+                    createdAt: "2026-11-14"
+                },
+                {
+                    id: "9564",
+                    phone: "966551234567",
+                    name: "عبدالله محمد القحطاني",
+                    type: "طلب دعم سكني وإنساني",
+                    account: "SA44 8000 0000 6080 1016 7519",
+                    status: "review",
+                    step: 2,
+                    notes: "طلبك حالياً في مرحلة المراجعة والتدقيق لدى اللجنة المختصة.",
+                    createdAt: "2026-11-14"
+                }
+            ]
+        };
+
+        let appData = loadAppData();
+        let activeTransactionId = "9563";
+        let isAdminAuthenticated = false;
+
+        function loadAppData() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    return JSON.parse(saved);
+                }
+            } catch (e) {
+                console.warn("Storage read fallback");
+            }
+            return JSON.parse(JSON.stringify(DEFAULT_STATE));
+        }
+
+        function saveAppData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+            } catch (e) {
+                console.warn("Storage write fallback");
+            }
+        }
+
+        // ==================== VIEW NAVIGATION ====================
+        function switchMainView(viewName) {
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-apply').classList.add('hidden');
+            document.getElementById('view-status').classList.add('hidden');
+
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (viewName === 'status') {
+                renderStatusCard(activeTransactionId);
+            }
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function toggleQuickDropdown() {
+            const menu = document.getElementById('quick-dropdown');
+            menu.classList.toggle('hidden');
+        }
+
+        // ==================== RENDER HOME SECTIONS ====================
+        function renderHomeContent() {
+            document.getElementById('header-brand-name').textContent = appData.settings.brandName;
+
+            // Stats
+            document.getElementById('home-stats-grid').innerHTML = appData.stats.map(s => `
+                <div class="royal-glass rounded-3xl p-6 text-center hover:-translate-y-1 transition">
+                    <div class="w-12 h-12 rounded-2xl bg-gold-500/15 border border-gold-500/30 text-gold-400 mx-auto flex items-center justify-center mb-3">
+                        <i data-lucide="${s.icon}" class="w-6 h-6"></i>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-black text-gold-300" dir="ltr">${s.number}</div>
+                    <div class="text-xs sm:text-sm text-slate-300 font-semibold mt-1">${s.label}</div>
+                </div>
+            `).join('');
+
+            // Impact Areas
+            document.getElementById('home-impact-grid').innerHTML = appData.impactAreas.map((area, i) => `
+                <div class="group relative h-72 rounded-3xl overflow-hidden border border-gold-500/25">
+                    <img src="${area.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 opacity-60">
+                    <div class="absolute inset-0 bg-gradient-to-t from-royal-950 via-royal-950/50 to-transparent"></div>
+                    <div class="absolute top-3 right-3 w-8 h-8 rounded-full bg-gold-500 text-royal-900 font-black text-xs flex items-center justify-center">0${i + 1}</div>
+                    <div class="absolute bottom-0 inset-x-0 p-5">
+                        <h3 class="font-black text-lg text-white mb-1">${area.title}</h3>
+                        <p class="text-xs text-slate-300 line-clamp-2">${area.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Projects
+            document.getElementById('home-projects-grid').innerHTML = appData.projects.map(p => `
+                <div class="royal-glass rounded-3xl overflow-hidden flex flex-col">
+                    <img src="${p.img}" class="h-48 w-full object-cover opacity-85">
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-extrabold text-gold-400">${p.category}</span>
+                            <h3 class="text-lg font-black text-white mt-1 mb-3">${p.title}</h3>
+                        </div>
+                        <button onclick="switchMainView('apply')" class="text-xs font-bold text-gold-300 hover:underline self-start">التقديم على البرنامج ←</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== CLIENT APPLICATION SUBMISSION ====================
+        function handleClientApplication(e) {
+            e.preventDefault();
+            const newRef = String(Math.floor(1000 + Math.random() * 9000));
+            const newTx = {
+                id: newRef,
+                phone: document.getElementById('app-phone').value.trim(),
+                name: document.getElementById('app-name').value.trim(),
+                type: document.getElementById('app-type').value,
+                account: document.getElementById('app-account').value.trim() || "غير مرفق",
+                status: "review",
+                step: 1,
+                notes: `تم استلام طلبك (${document.getElementById('app-details').value.trim()}) وهو الآن قيد المراجعة من قبل الإدارة.`,
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+
+            appData.transactions.unshift(newTx);
+            saveAppData();
+            activeTransactionId = newRef;
+
+            document.getElementById('generated-ref-number').textContent = newRef;
+            document.getElementById('generated-ticket-box').classList.remove('hidden');
+            document.getElementById('view-created-status-btn').onclick = () => switchMainView('status');
+
+            e.target.reset();
+            showToast(`تم إصدار الرقم المرجعي ${newRef} بنجاح!`);
+        }
+
+        // ==================== STATUS TRACKING ENGINE ====================
+        function quickSearchTransaction() {
+            const query = document.getElementById('quick-track-input').value.trim();
+            if (!query) {
+                switchMainView('status');
+                return;
+            }
+            findAndShowTransaction(query);
+        }
+
+        function handleStatusLookup(e) {
+            e.preventDefault();
+            const query = document.getElementById('status-search-input').value.trim();
+            if (query) findAndShowTransaction(query);
+        }
+
+        function findAndShowTransaction(query) {
+            const found = appData.transactions.find(t => t.id === query || t.phone === query);
+            if (found) {
+                activeTransactionId = found.id;
+                switchMainView('status');
+                showToast(`تم العثور على المعاملة رقم ${found.id}`);
+            } else {
+                showToast("لم يتم العثور على معاملة مطابقة لهذا الرقم. تأكد من الرقم المرجعي.");
+            }
+        }
+
+        function renderStatusCard(txId) {
+            const tx = appData.transactions.find(t => t.id === txId) || appData.transactions[0];
+            if (!tx) return;
+            activeTransactionId = tx.id;
+
+            document.getElementById('st-client-name').textContent = `المستفيد: ${tx.name}`;
+            document.getElementById('st-tx-id').textContent = tx.id;
+            document.getElementById('st-phone').textContent = tx.phone;
+            document.getElementById('st-type').textContent = tx.type;
+            document.getElementById('st-account').textContent = tx.account || "—";
+            document.getElementById('st-notes').textContent = tx.notes || "لا توجد ملاحظات إضافية.";
+
+            // Update WhatsApp link
+            const waMsg = encodeURIComponent(`مرحباً، أستفسر بخصوص المعاملة رقم: ${tx.id} - الاسم: ${tx.name}`);
+            document.getElementById('st-whatsapp-btn').href = `https://wa.me/${appData.settings.whatsapp}?text=${waMsg}`;
+
+            // Status Visuals & Stepper
+            const approvedBanner = document.getElementById('st-approved-banner');
+            const titleEl = document.getElementById('st-status-title');
+            const subEl = document.getElementById('st-status-sub');
+            const barEl = document.getElementById('st-stepper-bar');
+
+            const step2Dot = document.getElementById('step-dot-2');
+            const step3Dot = document.getElementById('step-dot-3');
+
+            // Reset dots
+            step2Dot.className = "w-9 h-9 rounded-full bg-white/15 text-slate-300 font-black text-sm flex items-center justify-center";
+            step2Dot.textContent = "2";
+            step3Dot.className = "w-9 h-9 rounded-full bg-white/15 text-slate-300 font-black text-sm flex items-center justify-center";
+            step3Dot.textContent = "3";
+
+            if (tx.step >= 2) {
+                step2Dot.className = "w-9 h-9 rounded-full bg-gold-500 text-royal-900 font-black text-sm flex items-center justify-center shadow-md";
+                step2Dot.textContent = "✓";
+            }
+            if (tx.step >= 3) {
+                step3Dot.className = "w-9 h-9 rounded-full bg-gold-500 text-royal-900 font-black text-sm flex items-center justify-center shadow-md";
+                step3Dot.textContent = "✓";
+            }
+
+            barEl.style.width = tx.step === 1 ? "15%" : tx.step === 2 ? "55%" : "100%";
+
+            if (tx.status === 'approved') {
+                approvedBanner.classList.remove('hidden');
+                titleEl.textContent = "تم اعتماد الطلب";
+                titleEl.className = "text-xl font-black text-gold-300";
+                subEl.textContent = "تم التحقق من البيانات واعتماد المعاملة بنجاح";
+            } else if (tx.status === 'completed') {
+                approvedBanner.classList.remove('hidden');
+                approvedBanner.innerHTML = `<p class="text-sm sm:text-base font-black text-emerald-300">✓ تم إنجاز وتنفيذ المعاملة بالكامل</p>`;
+                titleEl.textContent = "مكتمل ومنفّذ";
+                titleEl.className = "text-xl font-black text-emerald-400";
+                subEl.textContent = "تمت معالجة الطلب وإغلاقه بنجاح";
+            } else if (tx.status === 'review') {
+                approvedBanner.classList.add('hidden');
+                titleEl.textContent = "قيد المراجعة والتدقيق";
+                titleEl.className = "text-xl font-black text-amber-300";
+                subEl.textContent = "جاري دراسة الطلب من قبل لجنة الإدارة";
+            } else {
+                approvedBanner.classList.add('hidden');
+                titleEl.textContent = "يتطلب مراجعة أو استكمال";
+                titleEl.className = "text-xl font-black text-red-400";
+                subEl.textContent = "يرجى الاطلاع على ملاحظات الإدارة أدناه";
+            }
+        }
+
+        function copyStatusShareLink() {
+            const tx = appData.transactions.find(t => t.id === activeTransactionId);
+            if (!tx) return;
+            const url = `${window.location.origin}${window.location.pathname}?transactionId=${tx.id}&phone=${tx.phone}`;
+            const tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast(`تم نسخ رابط المتابعة للمعاملة رقم ${tx.id}`);
+        }
+
+        // ==================== ADMIN AUTHENTICATION & CONTROLS ====================
+        function openAdminModal() {
+            const modal = document.getElementById('admin-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            if (isAdminAuthenticated) {
+                showAdminDashboard();
+            } else {
+                document.getElementById('admin-login-screen').classList.remove('hidden');
+                document.getElementById('admin-dashboard-screen').classList.add('hidden');
+            }
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function closeAdminModal() {
+            const modal = document.getElementById('admin-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const enteredPass = document.getElementById('admin-pass-input').value.trim();
+            const enteredName = document.getElementById('admin-user-input').value.trim() || ADMIN_CONFIG.managerName;
+
+            if (enteredPass === ADMIN_CONFIG.password) {
+                isAdminAuthenticated = true;
+                document.getElementById('admin-login-error').classList.add('hidden');
+                document.getElementById('admin-pass-input').value = '';
+                document.getElementById('admin-welcome-subtitle').textContent = `مرحباً، ${enteredName} • صلاحيات التحكم الكاملة مفعّلة`;
+                showAdminDashboard();
+                showToast(`أهلاً بك ${enteredName} في لوحة الإدارة`);
+            } else {
+                document.getElementById('admin-login-error').classList.remove('hidden');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminAuthenticated = false;
+            document.getElementById('admin-login-screen').classList.remove('hidden');
+            document.getElementById('admin-dashboard-screen').classList.add('hidden');
+            document.getElementById('admin-welcome-subtitle').textContent = "بوابة الإدارة العليا • يرجى تسجيل الدخول";
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('admin-login-screen').classList.add('hidden');
+            document.getElementById('admin-dashboard-screen').classList.remove('hidden');
+            renderAdminTransactionsList();
+            generateRandomRefInput();
+            document.getElementById('set-brand-name').value = appData.settings.brandName;
+            document.getElementById('set-whatsapp').value = appData.settings.whatsapp;
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function switchAdminTab(tab) {
+            ['transactions', 'issue', 'site'].forEach(t => {
+                document.getElementById(`adm-panel-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`adm-tab-${t}`);
+                btn.classList.remove('btn-gold');
+                btn.classList.add('text-slate-200', 'hover:bg-white/10');
+            });
+
+            document.getElementById(`adm-panel-${tab}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`adm-tab-${tab}`);
+            activeBtn.classList.add('btn-gold');
+            activeBtn.classList.remove('text-slate-200', 'hover:bg-white/10');
+        }
+
+        function renderAdminTransactionsList() {
+            const container = document.getElementById('admin-transactions-list');
+            document.getElementById('adm-tx-count').textContent = appData.transactions.length;
+
+            const statusLabels = {
+                approved: { text: "تم الاعتماد", cls: "bg-gold-500/20 text-gold-300 border-gold-500/40" },
+                completed: { text: "مكتمل ومنفذ", cls: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" },
+                review: { text: "قيد المراجعة", cls: "bg-amber-500/20 text-amber-300 border-amber-500/40" },
+                rejected: { text: "يتطلب استكمال", cls: "bg-red-500/20 text-red-300 border-red-500/40" }
+            };
+
+            container.innerHTML = appData.transactions.map(tx => {
+                const st = statusLabels[tx.status] || statusLabels.review;
+                return `
+                    <div class="royal-glass p-5 rounded-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="space-y-1.5">
+                            <div class="flex flex-wrap items-center gap-2.5">
+                                <span class="px-3 py-1 rounded-lg bg-royal-950 border border-gold-500/40 text-gold-300 font-black text-sm">
+                                    رقم المرجع / الشكوى: #${tx.id}
+                                </span>
+                                <span class="px-2.5 py-1 rounded-lg border text-xs font-bold ${st.cls}">
+                                    ${st.text} (المرحلة ${tx.step}/3)
+                                </span>
+                            </div>
+                            <div class="font-bold text-white text-base">${tx.name} <span class="text-xs text-slate-400 font-normal" dir="ltr">(${tx.phone})</span></div>
+                            <div class="text-xs text-slate-300">${tx.type} • الحساب: <span class="text-gold-300">${tx.account}</span></div>
+                            <div class="text-xs text-slate-400 bg-royal-950/60 p-2.5 rounded-xl border border-white/5">${tx.notes}</div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 shrink-0">
+                            <button onclick="openEditTxModal('${tx.id}')" class="px-4 py-2.5 rounded-xl btn-gold text-xs flex items-center gap-1.5">
+                                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                <span>تعديل / إنجاز / تغيير الرقم</span>
+                            </button>
+                            <button onclick="previewTransactionAsClient('${tx.id}')" class="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold">
+                                معاينة
+                            </button>
+                            <button onclick="deleteTransaction('${tx.id}')" class="px-3 py-2.5 rounded-xl bg-red-500/15 hover:bg-red-500/30 text-red-300 text-xs font-bold">
+                                حذف
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function generateRandomRefInput() {
+            const randomId = String(Math.floor(1000 + Math.random() * 9000));
+            const input = document.getElementById('new-tx-id');
+            if (input) input.value = randomId;
+        }
+
+        function handleIssueNewTransaction(e) {
+            e.preventDefault();
+            const id = document.getElementById('new-tx-id').value.trim();
+            if (appData.transactions.some(t => t.id === id)) {
+                showToast("هذا الرقم المرجعي مستخدم بالفعل، اختر رقماً آخر.");
+                return;
+            }
+
+            const tx = {
+                id,
+                phone: document.getElementById('new-tx-phone').value.trim(),
+                name: document.getElementById('new-tx-name').value.trim(),
+                type: document.getElementById('new-tx-type').value.trim(),
+                status: document.getElementById('new-tx-status').value,
+                step: parseInt(document.getElementById('new-tx-step').value, 10),
+                account: document.getElementById('new-tx-account').value.trim() || "غير مرفق",
+                notes: document.getElementById('new-tx-notes').value.trim() || "تم تسجيل المعاملة في النظام.",
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+
+            appData.transactions.unshift(tx);
+            saveAppData();
+            activeTransactionId = id;
+            e.target.reset();
+            generateRandomRefInput();
+            renderAdminTransactionsList();
+            switchAdminTab('transactions');
+            showToast(`تم إصدار الرقم المرجعي #${id} بنجاح!`);
+        }
+
+        function openEditTxModal(txId) {
+            const tx = appData.transactions.find(t => t.id === txId);
+            if (!tx) return;
+
+            document.getElementById('edit-tx-original-id').value = tx.id;
+            document.getElementById('edit-tx-id').value = tx.id;
+            document.getElementById('edit-tx-phone').value = tx.phone;
+            document.getElementById('edit-tx-name').value = tx.name;
+            document.getElementById('edit-tx-status').value = tx.status;
+            document.getElementById('edit-tx-step').value = String(tx.step);
+            document.getElementById('edit-tx-account').value = tx.account;
+            document.getElementById('edit-tx-notes').value = tx.notes;
+
+            const modal = document.getElementById('edit-tx-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeEditTxModal() {
+            const modal = document.getElementById('edit-tx-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function saveEditedTransaction(e) {
+            e.preventDefault();
+            const originalId = document.getElementById('edit-tx-original-id').value;
+            const newId = document.getElementById('edit-tx-id').value.trim();
+
+            const idx = appData.transactions.findIndex(t => t.id === originalId);
+            if (idx === -1) return;
+
+            appData.transactions[idx] = {
+                ...appData.transactions[idx],
+                id: newId,
+                phone: document.getElementById('edit-tx-phone').value.trim(),
+                name: document.getElementById('edit-tx-name').value.trim(),
+                status: document.getElementById('edit-tx-status').value,
+                step: parseInt(document.getElementById('edit-tx-step').value, 10),
+                account: document.getElementById('edit-tx-account').value.trim(),
+                notes: document.getElementById('edit-tx-notes').value.trim()
+            };
+
+            saveAppData();
+            activeTransactionId = newId;
+            renderAdminTransactionsList();
+            renderStatusCard(newId);
+            closeEditTxModal();
+            showToast(`تم تحديث المعاملة وحفظ الرقم المرجعي #${newId}`);
+        }
+
+        function previewTransactionAsClient(txId) {
+            activeTransactionId = txId;
+            closeAdminModal();
+            switchMainView('status');
+        }
+
+        function deleteTransaction(txId) {
+            if (appData.transactions.length <= 1) {
+                showToast("يجب إبقاء معاملة واحدة على الأقل في النظام.");
+                return;
+            }
+            appData.transactions = appData.transactions.filter(t => t.id !== txId);
+            saveAppData();
+            renderAdminTransactionsList();
+            showToast("تم حذف المعاملة.");
+        }
+
+        function saveSiteSettings(e) {
+            e.preventDefault();
+            appData.settings.brandName = document.getElementById('set-brand-name').value.trim() || "مؤسسة الدعم الإنساني";
+            appData.settings.whatsapp = document.getElementById('set-whatsapp').value.trim() || "966500000000";
+            saveAppData();
+            renderHomeContent();
+            showToast("تم حفظ إعدادات المؤسسة بنجاح!");
+        }
+
+        // ==================== TOAST & URL PARAMETER CHECK ====================
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = "pointer-events-auto bg-royal-950 text-gold-300 border border-gold-500/50 px-5 py-3.5 rounded-2xl shadow-2xl text-xs sm:text-sm font-bold flex items-center gap-2.5";
+            el.innerHTML = `<span class="w-2 h-2 rounded-full bg-gold-400"></span><span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3500);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderHomeContent();
+
+            // Check if URL has ?transactionId=...&phone=...
+            const params = new URLSearchParams(window.location.search);
+            const urlTxId = params.get('transactionId');
+            const urlPhone = params.get('phone');
+
+            if (urlTxId) {
+                const exists = appData.transactions.find(t => t.id === urlTxId);
+                if (!exists) {
+                    appData.transactions.unshift({
+                        id: urlTxId,
+                        phone: urlPhone || "966500000000",
+                        name: `المستفيد - معاملة رقم ${urlTxId}`,
+                        type: "طلب مساعدة مالية وإنسانية",
+                        account: "SA88 8000 0000 6080 1016 7519",
+                        status: "approved",
+                        step: 3,
+                        notes: "تم اعتماد طلبكم بنجاح وتجهيز أمر الصرف.",
+                        createdAt: new Date().toISOString().split('T')[0]
+                    });
+                    saveAppData();
+                }
+                activeTransactionId = urlTxId;
+                switchMainView('status');
+            }
+
+            if (window.lucide) window.lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
